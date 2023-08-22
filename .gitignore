@@ -1,1 +1,4 @@
 node_modules
+dist
+tmp/audios/*
+tmp/files/*

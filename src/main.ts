@@ -88,6 +88,7 @@ app.post("/audios", uploadAudios.array("files"), (request, response) => {
   response.json(data);
 });
 
-app.listen(3000, () => {
-  console.log({ message: "🚀 Running" });
+app.listen({
+  host: "0.0.0.0",
+  port: process.env.PORT || 3333,
 });
