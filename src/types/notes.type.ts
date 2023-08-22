@@ -3,6 +3,11 @@ export type TNote = {
   back: string;
 };
 
+export type TAudio = {
+  name: string;
+  url: string;
+};
+
 export type TData = TNote & {
-  url?: string;
+  audio: TAudio;
 };

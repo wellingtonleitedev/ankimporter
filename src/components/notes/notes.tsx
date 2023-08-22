@@ -19,7 +19,7 @@ const Notes = ({ data }: TNotesProps) => {
               Play
             </button>
             <audio ref={(element) => (audioRef.current[index] = element!)}>
-              <source src={`http://localhost:3333/public/${note.url}`} />
+              <source src={note.audio.url} />
             </audio>
           </div>
         </li>
