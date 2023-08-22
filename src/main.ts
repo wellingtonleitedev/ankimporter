@@ -82,7 +82,7 @@ app.post("/audios", uploadAudios.array("files"), (request, response) => {
   if (!files?.length) return;
 
   const data = Object.values(files).map((file) => ({
-    url: file.originalname,
+    name: file.originalname,
   }));
 
   response.json(data);
