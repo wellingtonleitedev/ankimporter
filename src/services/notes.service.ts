@@ -1,11 +1,10 @@
 import { httpClient } from "../config";
 import { sanitizeNotes } from "../sanitizers";
-import { INote } from "../types";
+import { createFormDataBody } from "../utils";
+import { TNote } from "../types";
 
-export const getNotes = async (file: File): Promise<INote[]> => {
-  const body = new FormData();
-  body.append("file", file);
-
+export const getNotes = async (files: FileList): Promise<TNote[]> => {
+  const body = createFormDataBody("file", files);
   const { data } = await httpClient.post("files", body);
 
   return sanitizeNotes(data);

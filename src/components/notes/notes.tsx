@@ -1,34 +1,28 @@
-import { AudioHTMLAttributes, useRef } from "react";
-import { INote } from "../../types";
+import { TData } from "../../types";
+import { useNotes } from "./notes.util";
 
 type TNotesProps = {
-  data: Array<
-    INote & {
-      url?: string;
-    }
-  >;
+  data: TData[];
 };
 
 const Notes = ({ data }: TNotesProps) => {
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  const onClick = () => {
-    if (audioRef.current) {
-      audioRef.current.play();
-    }
-  };
+  const { audioRef, play } = useNotes();
 
   return (
-    <ul className="p-5">
-      {data.map((note) => (
-        <div className="flex justify-between pb-5">
-          <li>{note.front}</li>
-          <li>{note.back}</li>
-          <button onClick={onClick}>Play</button>
-          <audio ref={audioRef}>
-            <source src={`http://localhost:3000/public/${note.url}`} />
-          </audio>
-        </div>
+    <ul className="py-5">
+      {data.map((note, index) => (
+        <li key={note.front} className="flex justify-between gap-1.5 pb-5">
+          <span className="flex-1">{note.front}</span>
+          <span className="flex-1">{note.back}</span>
+          <div>
+            <button className="px-3 py-2 rounded" onClick={() => play(index)}>
+              Play
+            </button>
+            <audio ref={(element) => (audioRef.current[index] = element!)}>
+              <source src={`http://localhost:3333/public/${note.url}`} />
+            </audio>
+          </div>
+        </li>
       ))}
     </ul>
   );

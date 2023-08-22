@@ -1,16 +1,18 @@
 import { Notes } from "../../components";
-import { useHome } from "./home.utils";
+import { useHome } from "./home.util";
 
 const Home = () => {
-  const { data, fetchAudios, fetchNotes } = useHome();
+  const { data, fetchData, onSubmit } = useHome();
 
   return (
-    <main style={{ margin: "auto", maxWidth: 992 }}>
-      <h1 className="text-3xl font-bold underline">Ankimporter</h1>
-      <form className="flex justify-between my-10">
-        <input type="file" onChange={fetchNotes} />
-        <input type="file" multiple onChange={fetchAudios} />
-        <button type="submit">Submit</button>
+    <main className="m-auto max-w-5xl px-0.5 py-5">
+      <h1 className="text-3xl text-center font-bold">Ankimporter</h1>
+      <form onSubmitCapture={onSubmit} className="flex justify-between my-10">
+        <input type="file" name="notes" onChange={fetchData} />
+        <input multiple type="file" name="audios" onChange={fetchData} />
+        <button type="submit" disabled={!data.length}>
+          Import
+        </button>
       </form>
       <Notes data={data} />
     </main>
