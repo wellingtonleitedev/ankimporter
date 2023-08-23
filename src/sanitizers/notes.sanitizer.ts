@@ -5,7 +5,7 @@ type TNoteResponse = string[][];
 
 export const sanitizeAudios = (response: TAudioResponse): TAudio[] =>
   response.map((audio) => ({
-    url: `http://localhost:3333/public/${audio.name}`,
+    url: `${import.meta.env.VITE_API_BASE_URL}public/${audio.name}`,
     name: audio.name,
   }));
 

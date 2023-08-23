@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useGetAudios, useGetNotes } from "../../hooks";
+import { useGetAudios, useGetNotes, useImportNotes } from "../../hooks";
 import { TAudio, TData, TNote } from "../../types";
 
 export const useHome = () => {
   const { data: audios, mutateAsync: getAudios } = useGetAudios();
   const { data: notes, mutateAsync: getNotes } = useGetNotes();
+  const { mutateAsync: importNotes } = useImportNotes();
   const [data, setData] = useState<TData[]>([]);
 
   const gets: Record<string, (files: FileList) => Promise<TAudio[] | TNote[]>> =
@@ -22,7 +23,23 @@ export const useHome = () => {
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log({ event });
+    const body = data.map((note) => ({
+      deckName: "test1",
+      modelName: "Básico",
+      fields: {
+        Frente: note.front,
+        Verso: note.back,
+      },
+      audio: [
+        {
+          url: note.audio.url,
+          filename: note.audio.name,
+          fields: ["Frente"],
+        },
+      ],
+    }));
+
+    await importNotes(body);
   };
 
   useEffect(() => {

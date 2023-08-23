@@ -11,3 +11,17 @@ export type TAudio = {
 export type TData = TNote & {
   audio: TAudio;
 };
+
+export type TNoteRequest = {
+  deckName: string;
+  modelName: string;
+  fields: {
+    Frente: string;
+    Verso: string;
+  };
+  audio: {
+    url: string;
+    filename: string;
+    fields: string[];
+  }[];
+};
