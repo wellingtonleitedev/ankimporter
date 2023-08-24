@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useGetAudios, useGetNotes } from "../../hooks";
 import { TData, TNote } from "../../types";
+import { useGetAudios, useGetNotes, useImportNotes } from "../../hooks";
 
 export const useHome = () => {
   const { data: audios, mutateAsync: getAudios } = useGetAudios();
   const { data: notes, mutateAsync: getNotes } = useGetNotes();
+  const { mutateAsync: importNotes } = useImportNotes();
   const [data, setData] = useState<TData[]>([]);
 
   const gets: Record<
@@ -24,21 +25,52 @@ export const useHome = () => {
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log({ event });
+    const body = data.map((note) => ({
+      deckName: "test1",
+      modelName: "Básico",
+      fields: {
+        Frente: note.front,
+        Verso: note.back,
+      },
+      audio: note.audio
+        ? [
+            {
+              url: note.audio.url,
+              filename: note.audio.name,
+              fields: ["Frente"],
+            },
+          ]
+        : [],
+    }));
+
+    await importNotes(body);
   };
 
   useEffect(() => {
-    let enhacedNotes = [];
-    if (audios?.length && notes?.length) {
-      for (let index = 0; index < notes?.length; index++) {
-        enhacedNotes[index] = {
-          ...notes[index],
-          ...audios[index],
-        };
-      }
+    let sanitizedData = notes ?? [];
 
-      setData(enhacedNotes);
+    if (notes?.length && audios?.length) {
+      sanitizedData = notes.map((note) => {
+        const audio = audios.find((audio) =>
+          note.front
+            .toLowerCase()
+            .match(
+              audio.name
+                .replace(".mp3", "")
+                .replace(/\d/g, "")
+                .toLowerCase()
+                .trim()
+            )
+        );
+
+        return {
+          ...note,
+          audio,
+        };
+      });
     }
+
+    setData(sanitizedData);
   }, [notes, audios]);
 
   return { data, fetchData, onSubmit };

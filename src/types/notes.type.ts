@@ -3,6 +3,25 @@ export type TNote = {
   back: string;
 };
 
+export type TAudio = {
+  name: string;
+  url: string;
+};
+
 export type TData = TNote & {
-  url?: string;
+  audio?: TAudio;
+};
+
+export type TNoteRequest = {
+  deckName: string;
+  modelName: string;
+  fields: {
+    Frente: string;
+    Verso: string;
+  };
+  audio: {
+    url: string;
+    filename: string;
+    fields: string[];
+  }[];
 };
