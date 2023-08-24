@@ -9,7 +9,7 @@ export type TAudio = {
 };
 
 export type TData = TNote & {
-  audio: TAudio;
+  audio?: TAudio;
 };
 
 export type TNoteRequest = {
