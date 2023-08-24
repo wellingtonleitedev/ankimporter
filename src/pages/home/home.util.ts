@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TData, TNote } from "../../types";
+import { TAudio, TData, TNote } from "../../types";
 import { useGetAudios, useGetNotes, useImportNotes } from "../../hooks";
 
 export const useHome = () => {
@@ -8,13 +8,11 @@ export const useHome = () => {
   const { mutateAsync: importNotes } = useImportNotes();
   const [data, setData] = useState<TData[]>([]);
 
-  const gets: Record<
-    string,
-    (files: FileList) => Promise<{ url: string }[] | TNote[]>
-  > = {
-    audios: getAudios,
-    notes: getNotes,
-  };
+  const gets: Record<string, (files: FileList) => Promise<TAudio[] | TNote[]>> =
+    {
+      audios: getAudios,
+      notes: getNotes,
+    };
 
   const fetchData = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files, name } = event.target;
