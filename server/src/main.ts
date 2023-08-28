@@ -8,7 +8,7 @@ import LanguageDetect from "languagedetect";
 
 const tmpPath = path.join(__dirname, "..", "tmp");
 const filesPath = path.join(tmpPath, "files");
-const audiosPath = path.join(tmpPath, "audios");
+const audiosPath = path.join(tmpPath, "audio");
 
 const storageFiles = diskStorage({
   destination: (_, __, callback) => {
