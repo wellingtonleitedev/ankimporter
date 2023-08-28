@@ -1,4 +1,7 @@
 node_modules
 dist
-tmp/audios/*
+tmp/audio/*
 tmp/files/*
+.DS_Store
+
+!.gitkeep
