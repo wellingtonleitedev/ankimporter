@@ -22,10 +22,16 @@ export const useHome = () => {
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const storage = localStorage.getItem("settings");
+    const settings = storage
+      ? JSON.parse(storage)
+      : ({} as { deckname: string; type: string });
+
+    if (!settings.deckname || !settings.type) return;
 
     const body = data.map((note) => ({
-      deckName: "test1",
-      modelName: "Básico",
+      deckName: settings.deckname,
+      modelName: settings.type,
       fields: {
         Frente: note.front,
         Verso: note.back,
