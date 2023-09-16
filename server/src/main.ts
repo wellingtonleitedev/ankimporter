@@ -1,10 +1,11 @@
+import cors from "cors";
 import path from "path";
 import express from "express";
 import PdfParse from "pdf-parse";
 import { readFileSync } from "fs";
-import multer, { diskStorage } from "multer";
-import cors from "cors";
 import LanguageDetect from "languagedetect";
+import multer, { diskStorage } from "multer";
+import { randomUUID } from "crypto";
 
 const tmpPath = path.join(__dirname, "..", "tmp");
 const filesPath = path.join(tmpPath, "files");
@@ -57,7 +58,7 @@ app.post("/files", uploadFiles.single("file"), async (request, response) => {
 
   const lngDetector = new LanguageDetect();
 
-  const notes: string[][] = [];
+  const notes: { uuid: string; front: string; back: string }[] = [];
   lines.forEach((line, index) => {
     const [firstDetectedLanguage] = lngDetector.detect(line, 1);
     const [secondDetectedLanguage] = lngDetector.detect(lines[index + 1], 1);
@@ -69,7 +70,7 @@ app.post("/files", uploadFiles.single("file"), async (request, response) => {
       firstDetectedLanguage?.[0] === "english" &&
       ["portuguese", "spanish"].includes(secondDetectedLanguage?.[0])
     ) {
-      notes.push([line, lines[index + 1]]);
+      notes.push({ uuid: randomUUID(), front: line, back: lines[index + 1] });
     }
   });
 
