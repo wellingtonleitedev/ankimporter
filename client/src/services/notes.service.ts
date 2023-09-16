@@ -1,7 +1,7 @@
 import { httpClient } from "../config";
-import { sanitizeAudios, sanitizeNotes } from "../sanitizers";
 import { createFormDataBody } from "../utils";
-import { TAudio, TNote, TNoteRequest } from "../types";
+import { sanitizeAudios } from "../sanitizers";
+import { TAudio, TData, TNote, TNoteRequest } from "../types";
 
 export const getAudios = async (files: FileList): Promise<TAudio[]> => {
   const body = createFormDataBody("files", files);
@@ -12,8 +12,7 @@ export const getAudios = async (files: FileList): Promise<TAudio[]> => {
 export const getNotes = async (files: FileList): Promise<TNote[]> => {
   const body = createFormDataBody("file", files);
   const { data } = await httpClient.post("files", body);
-
-  return sanitizeNotes(data);
+  return data;
 };
 
 export const addNotes = async (notes: TNoteRequest[]) => {
@@ -27,4 +26,12 @@ export const addNotes = async (notes: TNoteRequest[]) => {
   );
 
   return data;
+};
+
+export const editNotes = async (editedNote: TData, notes?: TData[]) => {
+  if (!notes?.length) return;
+
+  const note = notes?.find((item) => item.uuid === editedNote.uuid);
+  if (note) Object.assign(note, { ...note, ...editedNote });
+  return notes;
 };

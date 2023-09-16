@@ -1,4 +1,5 @@
 export type TNote = {
+  uuid: string;
   front: string;
   back: string;
 };

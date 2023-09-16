@@ -1,23 +1,46 @@
-import { useMutation } from "@tanstack/react-query";
-import { getAudios, addNotes, getNotes } from "../services";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { TData } from "../types";
+import { mutationKeys } from "../constraints";
+import { getAudios, addNotes, getNotes, editNotes } from "../services";
 
 export const useGetAudios = () => {
   return useMutation({
-    mutationKey: ["audios"],
+    mutationKey: mutationKeys.audios,
     mutationFn: getAudios,
   });
 };
 
 export const useGetNotes = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationKey: ["notes"],
+    mutationKey: mutationKeys.notes,
     mutationFn: getNotes,
+    onSuccess: (data) => {
+      queryClient.setQueryData(mutationKeys.notes, data);
+    },
   });
 };
 
 export const useImportNotes = () => {
   return useMutation({
-    mutationKey: ["importNotes"],
+    mutationKey: mutationKeys.importNotes,
     mutationFn: addNotes,
+  });
+};
+
+export const useEditNotes = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: mutationKeys.editNotes,
+    mutationFn: async (note: TData) => {
+      const notes = queryClient.getQueryData<TData[]>(mutationKeys.notes);
+      editNotes(note, notes);
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(mutationKeys.notes, data);
+    },
   });
 };
